@@ -1,26 +1,38 @@
 <template>
   <div class="calculator">
-    <div v-if="loaded">
+    <div v-if="$store.state.loaded">
         {{ amount }}
         {{ selectedPortfolioType }}
         <input type="number" v-model="amount" placeholder="1000">
 
         <input type="radio" id="conservative" value="conservative" v-model="selectedPortfolioType">
         <label for="conservative">Conservative</label>
-        <input type="radio" id="moderate" value="moderate" v-model="selectedPortfolioType">
-        <label for="moderate">Moderate</label>
+        <input type="radio" id="moderateConservative" value="moderateConservative" v-model="selectedPortfolioType">
+        <label for="moderateConservative">Moderate Conservative</label>
+      <input type="radio" id="moderate" value="moderate" v-model="selectedPortfolioType">
+      <label for="moderate">Moderate</label>
+      <input type="radio" id="moderateAggressive" value="moderateAggressive" v-model="selectedPortfolioType">
+      <label for="moderateAggressive">Moderate Aggressive</label>
+      <input type="radio" id="aggressive" value="aggressive" v-model="selectedPortfolioType">
+      <label for="aggressive">Aggressive</label>
+
       <div>
-        <PortfolioItem label="Big Stocks" symbol='VOO' :portfolioType="selectedPortfolioType" :amount="amount" :portfolios="portfolios" @setValue="setValue"></PortfolioItem>
-        <PortfolioItem label="Small Stocks" symbol='VB' :portfolioType="selectedPortfolioType" :amount="amount" :portfolios="portfolios" @setValue="setValue"></PortfolioItem>
-        <PortfolioItem label="Emerging Markets Stocks" symbol='VWO' :portfolioType="selectedPortfolioType" :amount="amount" :portfolios="portfolios" @setValue="setValue"></PortfolioItem>
-        <PortfolioItem label="Real Estate Stocks" symbol='VNQ' :portfolioType="selectedPortfolioType" :amount="amount" :portfolios="portfolios" @setValue="setValue"></PortfolioItem>
-        <PortfolioItem label="Government Bonds" symbol='SHY' :portfolioType="selectedPortfolioType" :amount="amount" :portfolios="portfolios" @setValue="setValue"></PortfolioItem>
-        <PortfolioItem label="Corporate Bonds" symbol='LQD' :portfolioType="selectedPortfolioType" :amount="amount" :portfolios="portfolios" @setValue="setValue"></PortfolioItem>
-        <PortfolioItem label="Intl Big Stocks" symbol='VEA' :portfolioType="selectedPortfolioType" :amount="amount" :portfolios="portfolios" @setValue="setValue"></PortfolioItem>
+        {{ $store.getters.totalChanged }}
+        {{ $store.getters.totalChangedPercent }}
+      </div>
+
+      <div>
+        <PortfolioItem label="Big Stocks" symbol='VOO' :portfolioType="$store.state.selectedPortfolioType" :amount="$store.state.amount" :portfolios="$store.state.portfolios"></PortfolioItem>
+        <PortfolioItem label="Small" symbol='VB' :portfolioType="$store.state.selectedPortfolioType" :amount="$store.state.amount" :portfolios="$store.state.portfolios"></PortfolioItem>
+        <PortfolioItem label="Emerging" symbol='VWO' :portfolioType="$store.state.selectedPortfolioType" :amount="$store.state.amount" :portfolios="$store.state.portfolios"></PortfolioItem>
+        <PortfolioItem label="Real Estate" symbol='VNQ' :portfolioType="$store.state.selectedPortfolioType" :amount="$store.state.amount" :portfolios="$store.state.portfolios"></PortfolioItem>
+        <PortfolioItem label="Government" symbol='SHY' :portfolioType="$store.state.selectedPortfolioType" :amount="$store.state.amount" :portfolios="$store.state.portfolios"></PortfolioItem>
+        <PortfolioItem label="Corporate" symbol='LQD' :portfolioType="$store.state.selectedPortfolioType" :amount="$store.state.amount" :portfolios="$store.state.portfolios"></PortfolioItem>
+        <PortfolioItem label="Intl" symbol='VEA' :portfolioType="$store.state.selectedPortfolioType" :amount="$store.state.amount" :portfolios="$store.state.portfolios"></PortfolioItem>
       </div>
     </div>
     <div v-else>
-      Not loaded
+      Loading...
     </div>
 
   </div>
@@ -36,29 +48,36 @@ export default {
   components: {PortfolioItem},
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App',
-      amount: 1000,
-      selectedPortfolioType: 'moderate',
-      loaded: false,
-      portfolios: {},
-      values: {}
     }
   },
   created () {
     getData().then((data) => {
-      this.portfolios = data
-      this.loaded = true
+      this.$store.commit('setState', { key: 'portfolios', value: data })
+      this.$store.commit('setState', { key: 'loaded', value: true })
     })
-    console.log(acornsPortfolio(this.selectedPortfolioType))
+    console.log(acornsPortfolio(this.$store.state.selectedPortfolioType))
   },
   methods: {
     setValue (symbol, amount) {
-      this.values[symbol] = amount
+      this.$store.commit('setValues', { key: symbol, value: amount })
     }
   },
   computed: {
-    totalChange () {
-      return console.log(this.values)
+    amount: {
+      get () {
+        return this.$store.state.amount
+      },
+      set (amount) {
+        this.$store.commit('setState', { key: 'amount', value: amount })
+      }
+    },
+    selectedPortfolioType: {
+      get () {
+        return this.$store.state.selectedPortfolioType
+      },
+      set (type) {
+        this.$store.commit('setState', { key: 'selectedPortfolioType', value: type })
+      }
     }
   }
 }

@@ -22,12 +22,12 @@ export default {
     }
   },
   beforeUpdate () {
-    this.$emit('setValue', this.symbol, this.amountChanged)
   },
   computed: {
     amountChanged () {
-      const change = this.amountAllocated * this.percentChanged
-      return this.percentChanged > 0 ? this.amountAllocated + change : this.amountAllocated - change
+      const change = this.amountAllocated + (this.amountAllocated * this.percentChanged)
+      this.$store.commit('setChangedValues', { key: this.symbol, value: change })
+      return change
     },
     allocationPercentage () {
       return acornsPortfolio(this.portfolioType)[this.symbol]
