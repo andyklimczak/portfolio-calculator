@@ -1,4 +1,4 @@
-# portfolio-calculator
+# Portfolio Calculator
 
 > Simple Acorns portfolio calculator
 
