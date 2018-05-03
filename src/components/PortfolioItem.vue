@@ -1,17 +1,34 @@
 <template>
-  <div class="item">
-    <div v-if="amountChanged > 0">
-        {{ label }}
-        {{ symbol }}
-        {{ allocationPercentage }}
-        {{ amountAllocated }}
-        {{ percentChanged }}
-        {{ amountChanged }}
-    </div>
-  </div>
+  <tr>
+    <td>
+      {{ label }}
+    </td>
+    <td>
+      <a :href="symbolLink">
+      {{ symbol }}
+      </a>
+    </td>
+    <td class="has-sign" v-bind:class="percentChanged > 0 ? 'positive' : 'negative'">
+      {{ percentChanged | percentage }}
+    </td>
+    <td>
+      {{ allocationPercentage | percentageShort }}
+    </td>
+    <td>
+      {{ amountAllocated | currency }}
+    </td>
+    <td v-bind:class="amountChanged == amountAllocated ? '' : amountChanged > amountAllocated ? 'positive' : 'negative'">
+      {{ amountChanged | currency }}
+    </td>
+    <td class="has-sign" v-bind:class="totalChange == 0 ? '' : totalChange > 0 ? 'positive' : 'negative'">
+      {{ totalChange | currency }}
+    </td>
+  </tr>
 </template>
 
 <script>
+import numeral from 'numeral'
+
 import { acornsPortfolio } from '../utils/acorns'
 
 export default {
@@ -37,6 +54,23 @@ export default {
     },
     percentChanged () {
       return this.$props.portfolios[this.symbol].stats['year1ChangePercent']
+    },
+    totalChange () {
+      return this.amountChanged - this.amountAllocated
+    },
+    symbolLink () {
+      return `https://www.barchart.com/etfs-funds/quotes/${this.symbol}`
+    }
+  },
+  filters: {
+    currency (value) {
+      return numeral(Math.abs(value)).format('$0,0.00')
+    },
+    percentage (value) {
+      return numeral(Math.abs(value)).format('0.00%')
+    },
+    percentageShort (value) {
+      return numeral(Math.abs(value)).format('0%')
     }
   }
 }
@@ -44,18 +78,16 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h1, h2 {
-  font-weight: normal;
+.positive {
+  color: green;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
+.positive.has-sign:before {
+  content: '+'
 }
-li {
-  display: inline-block;
-  margin: 0 10px;
+.negative {
+  color: red
 }
-a {
-  color: #42b983;
+.negative.has-sign:before {
+  content: '-'
 }
 </style>

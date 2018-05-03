@@ -26,7 +26,7 @@ function acornsPortfolio (type) {
         'VOO': 0.24,
         'VB': 0.04,
         'VWO': 0,
-        'VNQ': 0.30,
+        'VNQ': 0.04,
         'SHY': 0.3,
         'LQD': 0.3,
         'VEA': 0.08

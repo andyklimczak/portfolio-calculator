@@ -14,11 +14,9 @@ export default new Vuex.Store({
   },
   mutations: {
     setState (state, { key, value }) {
-      console.log('setting', key, 'with', value)
       state[key] = value
     },
     setChangedValues (state, { key, value }) {
-      console.log('set changed values', key, 'with', value)
       Vue.set(state.changedValues, key, value)
     }
   },

@@ -1,44 +1,123 @@
 <template>
-  <div class="calculator">
-    <div v-if="$store.state.loaded">
-        {{ amount }}
-        {{ selectedPortfolioType }}
-        <input type="number" v-model="amount" placeholder="1000">
+  <section class="section">
+    <div class="container">
+      <div v-if="$store.state.loaded">
+        <div class="is-size-3 center">
+          Starting with
+          <div class="field">
+            <p class="control has-icons-left">
+              <input class="input is-large" type="number" v-model="amount" placeholder="1000">
+              <span class="icon is-small is-left">
+                <i class="fa fa-dollar-sign"></i>
+              </span>
+            </p>
+          </div>
+          allocated using the
+          <div class="control portfolios">
+            <label class="radio">
+              <input type="radio" id="conservative" value="conservative" v-model="selectedPortfolioType">
+              Conservative
+            </label>
+            <label class="radio">
+              <input type="radio" id="moderateConservative" value="moderateConservative"
+                     v-model="selectedPortfolioType">
+              Moderate Conservative
+            </label>
+            <label class="radio">
+              <input type="radio" id="moderate" value="moderate" v-model="selectedPortfolioType">
+              Moderate
+            </label>
+            <label class="radio">
+              <input type="radio" id="moderateAggressive" value="moderateAggressive" v-model="selectedPortfolioType">
+              Moderate Aggressive
+            </label>
+            <label class="radio">
+              <input type="radio" id="aggressive" value="aggressive" v-model="selectedPortfolioType">
+              Aggressive
+            </label>
+          </div>
+          Acorns portfolio after 1 year returns:
+        </div>
 
-        <input type="radio" id="conservative" value="conservative" v-model="selectedPortfolioType">
-        <label for="conservative">Conservative</label>
-        <input type="radio" id="moderateConservative" value="moderateConservative" v-model="selectedPortfolioType">
-        <label for="moderateConservative">Moderate Conservative</label>
-      <input type="radio" id="moderate" value="moderate" v-model="selectedPortfolioType">
-      <label for="moderate">Moderate</label>
-      <input type="radio" id="moderateAggressive" value="moderateAggressive" v-model="selectedPortfolioType">
-      <label for="moderateAggressive">Moderate Aggressive</label>
-      <input type="radio" id="aggressive" value="aggressive" v-model="selectedPortfolioType">
-      <label for="aggressive">Aggressive</label>
+        <div class="center results">
+          <div class="is-size-2">
+            {{ $store.getters.totalChanged | currency }}
+          </div>
+          <div class="is-size-4">
+            <span class="has-sign" v-bind:class="$store.getters.totalChanged - $store.state.amount > 0 ? 'positive' : 'negative'">
+              {{$store.getters.totalChanged - $store.state.amount | currency}},
+            </span>
+            <span class="has-sign" v-bind:class="$store.getters.totalChangedPercent > 0 ? 'positive' : 'negative'">
+              {{ $store.getters.totalChangedPercent | percentage }}
+            </span>
+          </div>
+        </div>
 
-      <div>
-        {{ $store.getters.totalChanged }}
-        {{ $store.getters.totalChangedPercent }}
+        <div class="center">
+          <table class="table is-hoverable">
+            <thead>
+            <th>
+              Holdings Type
+            </th>
+            <th>
+              ETF Symbol
+            </th>
+            <th>
+              ETF 1 Year Change %
+            </th>
+            <th>
+              <abbr title="Percentage amount of your total allocation used for this ETF">
+                Allocation %
+              </abbr>
+            </th>
+            <th>
+              <abbr title="Dollar amount of your total allocation used for this ETF">
+                Allocation $
+              </abbr>
+            </th>
+            <th>
+              <abbr title="Dollar amount your allocation changed for this ETF">
+                1 Year Change $
+              </abbr>
+            </th>
+            <th>
+              <abbr title="Percentage amount your allocation changed for this ETF">
+                1 Year Change %
+              </abbr>
+            </th>
+            </thead>
+            <tbody>
+            <PortfolioItem label="Large Company Stocks" symbol='VOO' :portfolioType="$store.state.selectedPortfolioType"
+                           :amount="$store.state.amount" :portfolios="$store.state.portfolios"></PortfolioItem>
+            <PortfolioItem label="Small Company Stocks" symbol='VB' :portfolioType="$store.state.selectedPortfolioType"
+                           :amount="$store.state.amount" :portfolios="$store.state.portfolios"></PortfolioItem>
+            <PortfolioItem label="Emerging Market Stocks" symbol='VWO'
+                           :portfolioType="$store.state.selectedPortfolioType"
+                           :amount="$store.state.amount" :portfolios="$store.state.portfolios"></PortfolioItem>
+            <PortfolioItem label="Real Estate Stocks" symbol='VNQ' :portfolioType="$store.state.selectedPortfolioType"
+                           :amount="$store.state.amount" :portfolios="$store.state.portfolios"></PortfolioItem>
+            <PortfolioItem label="Government Bonds" symbol='SHY' :portfolioType="$store.state.selectedPortfolioType"
+                           :amount="$store.state.amount" :portfolios="$store.state.portfolios"></PortfolioItem>
+            <PortfolioItem label="Corporate Bonds" symbol='LQD' :portfolioType="$store.state.selectedPortfolioType"
+                           :amount="$store.state.amount" :portfolios="$store.state.portfolios"></PortfolioItem>
+            <PortfolioItem label="Intl Large Company Stocks" symbol='VEA'
+                           :portfolioType="$store.state.selectedPortfolioType"
+                           :amount="$store.state.amount" :portfolios="$store.state.portfolios"></PortfolioItem>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+      <div v-else>
+        <progress class="progress is-large" value="60" max="100">60%</progress>
       </div>
 
-      <div>
-        <PortfolioItem label="Big Stocks" symbol='VOO' :portfolioType="$store.state.selectedPortfolioType" :amount="$store.state.amount" :portfolios="$store.state.portfolios"></PortfolioItem>
-        <PortfolioItem label="Small" symbol='VB' :portfolioType="$store.state.selectedPortfolioType" :amount="$store.state.amount" :portfolios="$store.state.portfolios"></PortfolioItem>
-        <PortfolioItem label="Emerging" symbol='VWO' :portfolioType="$store.state.selectedPortfolioType" :amount="$store.state.amount" :portfolios="$store.state.portfolios"></PortfolioItem>
-        <PortfolioItem label="Real Estate" symbol='VNQ' :portfolioType="$store.state.selectedPortfolioType" :amount="$store.state.amount" :portfolios="$store.state.portfolios"></PortfolioItem>
-        <PortfolioItem label="Government" symbol='SHY' :portfolioType="$store.state.selectedPortfolioType" :amount="$store.state.amount" :portfolios="$store.state.portfolios"></PortfolioItem>
-        <PortfolioItem label="Corporate" symbol='LQD' :portfolioType="$store.state.selectedPortfolioType" :amount="$store.state.amount" :portfolios="$store.state.portfolios"></PortfolioItem>
-        <PortfolioItem label="Intl" symbol='VEA' :portfolioType="$store.state.selectedPortfolioType" :amount="$store.state.amount" :portfolios="$store.state.portfolios"></PortfolioItem>
-      </div>
     </div>
-    <div v-else>
-      Loading...
-    </div>
-
-  </div>
+  </section>
 </template>
 
 <script>
+import numeral from 'numeral'
 import PortfolioItem from './PortfolioItem'
 
 import { getData } from '../utils/api'
@@ -79,24 +158,44 @@ export default {
         this.$store.commit('setState', { key: 'selectedPortfolioType', value: type })
       }
     }
+  },
+  filters: {
+    currency (value) {
+      return numeral(value).format('$0,0.00')
+    },
+    percentage (value) {
+      return numeral(value).format('0.00%')
+    }
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h1, h2 {
-  font-weight: normal;
+.positive {
+  color: green;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
+.positive.has-sign:before {
+  content: '+'
 }
-li {
-  display: inline-block;
-  margin: 0 10px;
+.negative {
+  color: red
 }
-a {
-  color: #42b983;
+.negative.has-sign:before {
+  content: '-'
+}
+.center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.results {
+  padding: 1em;
+}
+.portfolios {
+  padding: 1em;
+}
+.field {
+  padding: .5em;
 }
 </style>
