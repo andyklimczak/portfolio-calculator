@@ -1,7 +1,3 @@
-function andy () {
-  console.log('andy')
-}
-
 // VOO = Large Company Stocks
 // VB = Small Company Stocks
 // VWO = Emerging Market Stocks
@@ -64,4 +60,4 @@ function acornsPortfolio (type) {
   }
 }
 
-export { andy, acornsPortfolio }
+export { acornsPortfolio }

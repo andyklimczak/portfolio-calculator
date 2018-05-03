@@ -65,7 +65,7 @@
           ETF Symbol
         </th>
         <th>
-          ETF 1 Year Change %
+          ETF Period Change %
         </th>
         <th>
           <abbr title="Percentage amount of your total allocation used for this ETF">
@@ -78,13 +78,13 @@
           </abbr>
         </th>
         <th>
-          <abbr title="Dollar amount your allocation changed for this ETF">
-            1 Year Change $
+          <abbr title="End dollar change after period">
+            Amount After Period $
           </abbr>
         </th>
         <th>
-          <abbr title="Percentage amount your allocation changed for this ETF">
-            1 Year Change %
+          <abbr title="Dollar amount your allocation changed for this ETF">
+            Period Change $
           </abbr>
         </th>
         </thead>
@@ -121,7 +121,6 @@ import numeral from 'numeral'
 import PortfolioItem from '@/components/PortfolioItem'
 
 import { getData } from '../utils/api'
-import { acornsPortfolio } from '../utils/acorns'
 export default {
   name: 'Calulator',
   components: {PortfolioItem},
@@ -134,7 +133,6 @@ export default {
       this.$store.commit('setState', { key: 'portfolios', value: data })
       this.$store.commit('setState', { key: 'loaded', value: true })
     })
-    console.log(acornsPortfolio(this.$store.state.selectedPortfolioType))
   },
   methods: {
     setValue (symbol, amount) {
