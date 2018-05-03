@@ -1,6 +1,6 @@
-# acorns-calculator
+# portfolio-calculator
 
-> A Vue.js project
+> Simple Acorns portfolio calculator
 
 ## Build Setup
 
