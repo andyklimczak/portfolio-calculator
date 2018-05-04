@@ -39,7 +39,7 @@
       <div class="control periods">
         <label class="radio">
           <input type="radio" id="month6" value="month6" v-model="selectedPeriod">
-          6 Months
+          6 Month
         </label>
         <label class="radio">
           <input type="radio" id="year1" value="year1" v-model="selectedPeriod">
@@ -47,11 +47,11 @@
         </label>
         <label class="radio">
           <input type="radio" id="year2" value="year2" v-model="selectedPeriod">
-          2 Years
+          2 Year
         </label>
         <label class="radio">
           <input type="radio" id="year5" value="year5" v-model="selectedPeriod">
-          5 Years
+          5 Year
         </label>
         <label class="radio">
           <input type="radio" id="ytd" value="ytd" v-model="selectedPeriod">
