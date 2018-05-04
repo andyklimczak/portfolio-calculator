@@ -26,6 +26,6 @@ export default {
   color: #2c3e50;
 }
 html {
-  background-color: #eaeded
+  background-color: #eaeded;
 }
 </style>
