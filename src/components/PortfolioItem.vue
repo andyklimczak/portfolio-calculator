@@ -33,12 +33,10 @@ import { acornsPortfolio } from '../utils/acorns'
 
 export default {
   name: 'PortfolioItemContainer',
-  props: [ 'label', 'symbol', 'portfolioType', 'amount', 'portfolios' ],
+  props: [ 'label', 'symbol' ],
   data () {
     return {
     }
-  },
-  beforeUpdate () {
   },
   computed: {
     amountChanged () {
@@ -53,13 +51,25 @@ export default {
       return this.amount * this.allocationPercentage
     },
     percentChanged () {
-      return this.$props.portfolios[this.symbol].stats['year1ChangePercent']
+      return this.portfolios[this.symbol].stats[`${this.period}ChangePercent`]
     },
     totalChange () {
       return this.amountChanged - this.amountAllocated
     },
     symbolLink () {
       return `https://www.barchart.com/etfs-funds/quotes/${this.symbol}`
+    },
+    portfolioType () {
+      return this.$store.state.selectedPortfolioType
+    },
+    amount () {
+      return this.$store.state.amount
+    },
+    portfolios () {
+      return this.$store.state.portfolios
+    },
+    period () {
+      return this.$store.state.selectedPeriod
     }
   },
   filters: {

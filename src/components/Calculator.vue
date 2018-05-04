@@ -34,7 +34,31 @@
           Aggressive
         </label>
       </div>
-      Acorns portfolio after 1 year returns:
+      Acorns portfolio after
+
+      <div class="control periods">
+        <label class="radio">
+          <input type="radio" id="month6" value="month6" v-model="selectedPeriod">
+          6 Months
+        </label>
+        <label class="radio">
+          <input type="radio" id="year1" value="year1" v-model="selectedPeriod">
+          1 Year
+        </label>
+        <label class="radio">
+          <input type="radio" id="year2" value="year2" v-model="selectedPeriod">
+          2 Years
+        </label>
+        <label class="radio">
+          <input type="radio" id="year5" value="year5" v-model="selectedPeriod">
+          5 Years
+        </label>
+        <label class="radio">
+          <input type="radio" id="ytd" value="ytd" v-model="selectedPeriod">
+          YTD
+        </label>
+      </div>
+       period returns:
     </div>
 
     <div class="center results">
@@ -89,24 +113,13 @@
         </th>
         </thead>
         <tbody>
-        <PortfolioItem label="Large Company Stocks" symbol='VOO'
-                       :portfolioType="$store.state.selectedPortfolioType"
-                       :amount="$store.state.amount" :portfolios="$store.state.portfolios"></PortfolioItem>
-        <PortfolioItem label="Small Company Stocks" symbol='VB'
-                       :portfolioType="$store.state.selectedPortfolioType"
-                       :amount="$store.state.amount" :portfolios="$store.state.portfolios"></PortfolioItem>
-        <PortfolioItem label="Emerging Market Stocks" symbol='VWO'
-                       :portfolioType="$store.state.selectedPortfolioType"
-                       :amount="$store.state.amount" :portfolios="$store.state.portfolios"></PortfolioItem>
-        <PortfolioItem label="Real Estate Stocks" symbol='VNQ' :portfolioType="$store.state.selectedPortfolioType"
-                       :amount="$store.state.amount" :portfolios="$store.state.portfolios"></PortfolioItem>
-        <PortfolioItem label="Government Bonds" symbol='SHY' :portfolioType="$store.state.selectedPortfolioType"
-                       :amount="$store.state.amount" :portfolios="$store.state.portfolios"></PortfolioItem>
-        <PortfolioItem label="Corporate Bonds" symbol='LQD' :portfolioType="$store.state.selectedPortfolioType"
-                       :amount="$store.state.amount" :portfolios="$store.state.portfolios"></PortfolioItem>
-        <PortfolioItem label="Intl Large Company Stocks" symbol='VEA'
-                       :portfolioType="$store.state.selectedPortfolioType"
-                       :amount="$store.state.amount" :portfolios="$store.state.portfolios"></PortfolioItem>
+          <PortfolioItem label="Large Company Stocks" symbol='VOO'></PortfolioItem>
+          <PortfolioItem label="Small Company Stocks" symbol='VB'></PortfolioItem>
+          <PortfolioItem label="Emerging Market Stocks" symbol='VWO'></PortfolioItem>
+          <PortfolioItem label="Real Estate Stocks" symbol='VNQ'></PortfolioItem>
+          <PortfolioItem label="Government Bonds" symbol='SHY'></PortfolioItem>
+          <PortfolioItem label="Corporate Bonds" symbol='LQD'></PortfolioItem>
+          <PortfolioItem label="Intl Large Company Stocks" symbol='VEA'></PortfolioItem>
         </tbody>
       </table>
     </div>
@@ -120,7 +133,6 @@
 import numeral from 'numeral'
 import PortfolioItem from '@/components/PortfolioItem'
 
-import { getData } from '../utils/api'
 export default {
   name: 'Calulator',
   components: {PortfolioItem},
@@ -129,10 +141,7 @@ export default {
     }
   },
   created () {
-    getData().then((data) => {
-      this.$store.commit('setState', { key: 'portfolios', value: data })
-      this.$store.commit('setState', { key: 'loaded', value: true })
-    })
+    this.$store.dispatch('getData')
   },
   methods: {
     setValue (symbol, amount) {
@@ -155,14 +164,22 @@ export default {
       set (type) {
         this.$store.commit('setState', { key: 'selectedPortfolioType', value: type })
       }
+    },
+    selectedPeriod: {
+      get () {
+        return this.$store.state.selectedPeriod
+      },
+      set (period) {
+        this.$store.commit('setState', { key: 'selectedPeriod', value: period })
+      }
     }
   },
   filters: {
     currency (value) {
-      return numeral(value).format('$0,0.00')
+      return numeral(Math.abs(value)).format('$0,0.00')
     },
     percentage (value) {
-      return numeral(value).format('0.00%')
+      return numeral(Math.abs(value)).format('0.00%')
     }
   }
 }
@@ -190,7 +207,7 @@ export default {
 .results {
   padding: 1em;
 }
-.portfolios {
+.portfolios, .periods {
   padding: 1em;
 }
 .field {
