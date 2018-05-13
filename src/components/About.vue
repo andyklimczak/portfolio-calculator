@@ -5,6 +5,9 @@
         ETF information provided by <a href="https://iextrading.com/developer/docs/">IEX's API</a>.
       </p>
       <p>
+        Acorns portfolio information (ETF/percentage split) taken from Acorns app
+      </p>
+      <p>
         Built using Vuejs and Bulma css.
       </p>
       <p>

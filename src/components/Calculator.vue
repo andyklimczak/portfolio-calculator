@@ -34,7 +34,7 @@
           Aggressive
         </label>
       </div>
-      Acorns portfolio after
+      Acorns portfolio after a
 
       <div class="control periods">
         <label class="radio">
